@@ -2,6 +2,23 @@ using RiptideNetworking;
 using RiptideNetworking.Utils;
 using UnityEngine;
 
+public enum ClientToServerId : ushort
+{
+    username = 1,
+    inputs,
+    healthDown,
+    getPoint
+}
+
+public enum ServerToClientId : ushort
+{
+    playerSpawned = 1,
+    playerMovement,
+    playerHealth,
+    playerDied,
+    playerPoint
+}
+
 public class NetworkManager : MonoBehaviour
 {
     private static NetworkManager _singleton;
@@ -38,6 +55,7 @@ public class NetworkManager : MonoBehaviour
 
         Server = new Server();
         Server.Start(port, maxClientCount);
+        Server.ClientDisconnected += PlayerLeft;
     }
 
     private void FixedUpdate()
@@ -49,5 +67,13 @@ public class NetworkManager : MonoBehaviour
     private void OnApplicationQuit()
     {
         Server.Stop();
+    }
+
+    private void PlayerLeft(object sender, ClientDisconnectedEventArgs e)
+    {
+        /*
+        if (Player.players.TryGetValue(e.Id, out Player player))
+            Destroy(player.gameObject);
+        */
     }
 }
